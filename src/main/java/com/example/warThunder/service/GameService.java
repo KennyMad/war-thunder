@@ -1,10 +1,13 @@
 package com.example.warThunder.service;
 
-import com.example.warThunder.service.dto.GameDto;
-import com.example.warThunder.service.dto.UserDto;
+import com.example.warThunder.service.dto.*;
+
+import java.util.List;
 
 public interface GameService {
 
-    GameDto createGame(UserDto player1, UserDto player2);
+    GameDto createGame(List<UserDto> players);
+
+    MovementResultDto makeMove(MovementDto movementDto, int gameId);
 
 }

@@ -17,6 +17,7 @@ import javax.persistence.criteria.Root;
 import javax.transaction.Transactional;
 import java.util.List;
 import java.util.Queue;
+import java.util.stream.Collectors;
 
 @Slf4j
 public abstract class AbstractDao<T extends AbstractEntity> implements Dao<T> {
@@ -36,6 +37,12 @@ public abstract class AbstractDao<T extends AbstractEntity> implements Dao<T> {
 
     @Transactional
     @Override
+    public List<T> saveAll(List<T> entities){
+        return entities.stream().map(this::save).collect(Collectors.toList());
+    }
+
+    @Transactional
+    @Override
     public T update(T entity) {
         log.info("Обновление объекта класса " + getEntityClass().getSimpleName() + " объектом: " + entity);
         return entityManager.merge(entity);
@@ -51,14 +58,12 @@ public abstract class AbstractDao<T extends AbstractEntity> implements Dao<T> {
         query.executeUpdate();
     }
 
-    @Transactional
     @Override
     public T getById(Long id) {
         log.info("Поиск по id объекта " + getEntityClass().getSimpleName() + " id=" + id);
         return entityManager.find(getEntityClass(), id);
     }
 
-    @Transactional
     @Override
     public List<T> getAll() {
         log.info("Поиск всех объектов " + getEntityClass().getSimpleName());

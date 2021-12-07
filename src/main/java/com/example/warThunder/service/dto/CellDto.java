@@ -1,0 +1,16 @@
+package com.example.warThunder.service.dto;
+
+import lombok.Data;
+
+@Data
+public class CellDto {
+
+    private Long id;
+
+    private char x;
+    private char y;
+
+    private boolean isShooted;
+    private ShipDto shipDto;
+
+}

@@ -27,7 +27,12 @@ public class UserController {
         return new ResponseEntity<>(userService.getAllUsers(), HttpStatus.OK);
     }
 
-    @GetMapping("/get")
+    @GetMapping("/sorted")
+    public ResponseEntity<List<UserDto>> getSortByName(){
+        return new ResponseEntity<>(userService.getSortByName(), HttpStatus.OK);
+    }
+
+    @GetMapping("/login")
     public ResponseEntity<UserDto> getUserByNameAndPass(@RequestBody UserDto userDto){
         return new ResponseEntity<>(userService.getUserByNamePass(userDto), HttpStatus.OK);
     }

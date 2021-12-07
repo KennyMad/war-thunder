@@ -23,4 +23,7 @@ public class User extends AbstractEntity{
     @ManyToMany
     private List<History> gameHistory;
 
+    @ManyToMany
+    private List<Game> games;
+
 }

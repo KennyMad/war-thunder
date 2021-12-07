@@ -5,21 +5,24 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.Entity;
-import javax.persistence.ManyToOne;
+import javax.persistence.ManyToMany;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
-import java.util.Collection;
 import java.util.List;
 
-@Entity
+@Data
 @AllArgsConstructor
 @NoArgsConstructor
-@Data
-public class Field extends AbstractEntity{
+@Entity
+public class Game extends AbstractEntity{
 
     @OneToMany
-    private List<Cell> cells;
+    private List<Field> fields;
 
-    @ManyToOne
-    private Game game;
+    @OneToOne
+    private History history;
+
+    @ManyToMany
+    private List<User> users;
+
 }

@@ -14,7 +14,7 @@ import java.util.List;
 public class History extends AbstractEntity{
 
     @OneToOne
-    private Field field;
+    private Game game;
 
     @ManyToMany
     private List<User> users;

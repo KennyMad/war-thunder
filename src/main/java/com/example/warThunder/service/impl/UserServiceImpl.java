@@ -43,4 +43,10 @@ public class UserServiceImpl implements UserService {
         log.info("Получение пользователя по имени и паролю");
         return userMapper.toDto(userDao.getUserByNamePass(userMapper.toEntity(userDto)));
     }
+
+    @Override
+    public List<UserDto> getSortByName(){
+        log.info("Получение пользователей отсортированных по имени ");
+        return userDao.getSortByName().stream().map(userMapper::toDto).collect(Collectors.toList());
+    }
 }

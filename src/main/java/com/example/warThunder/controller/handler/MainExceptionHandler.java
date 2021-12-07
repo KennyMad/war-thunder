@@ -1,6 +1,7 @@
 package com.example.warThunder.controller.handler;
 
 import com.example.warThunder.exception.NotUniqueUsername;
+import com.example.warThunder.exception.UserNotExists;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -23,6 +24,12 @@ public class MainExceptionHandler {
     public ResponseEntity<?> onNotUniqueUsername(NotUniqueUsername ex){
         log.warn("Не уникальное имя пользователя {}", ex.getUsername());
         return new ResponseEntity<>("Не уникальное имя пользователя " + ex.getUsername(), HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler(UserNotExists.class)
+    public ResponseEntity<?> onUserNotExists(UserNotExists ex){
+        log.warn("Пользователя не существует {}", ex.getUsername());
+        return new ResponseEntity<>("Пользоваетял не существует " + ex.getUsername(), HttpStatus.BAD_REQUEST);
     }
 
 }

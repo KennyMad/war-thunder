@@ -13,4 +13,6 @@ public interface UserService {
 
     UserDto getUserByNamePass(UserDto userDto);
 
+    List<UserDto> getSortByName();
+
 }

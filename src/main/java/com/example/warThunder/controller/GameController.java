@@ -1,23 +1,28 @@
 package com.example.warThunder.controller;
 
 import com.example.warThunder.service.GameService;
-import com.example.warThunder.service.dto.GameDto;
-import com.example.warThunder.service.dto.UserDto;
+import com.example.warThunder.service.dto.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
-@RestController("/game")
+import java.util.List;
+
+@RestController
+@RequestMapping("/api/game")
 @RequiredArgsConstructor
 public class GameController {
     private final GameService gameService;
 
-    @PostMapping
-    public ResponseEntity<GameDto> createGame(@RequestBody UserDto userDto1, @RequestBody UserDto userDto2){
-        return new ResponseEntity<>(gameService.createGame(userDto1, userDto2), HttpStatus.OK);
+    @PostMapping("/create")
+    public ResponseEntity<GameDto> createGame(@RequestBody List<UserDto> players){
+        return new ResponseEntity<>(gameService.createGame(players), HttpStatus.OK);
+    }
+
+    @PostMapping("/{gameId}/move")
+    public ResponseEntity<MovementResultDto> makeMove(@RequestBody MovementDto movementDto, @PathVariable int gameId){
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 
 }
