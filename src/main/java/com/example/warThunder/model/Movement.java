@@ -24,5 +24,6 @@ public class Movement extends AbstractEntity{
     private int turnNumber;
 
     @ManyToOne
+    @JoinColumn(name = "history_fk")
     private History history;
 }

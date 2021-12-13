@@ -8,6 +8,6 @@ public interface GameService {
 
     GameDto createGame(List<UserDto> players);
 
-    MovementResultDto makeMove(MovementDto movementDto, int gameId);
+    MovementResultDto makeMove(MovementDto movementDto, long gameId);
 
 }

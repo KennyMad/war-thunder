@@ -27,6 +27,17 @@ public class UserController {
         return new ResponseEntity<>(userService.getAllUsers(), HttpStatus.OK);
     }
 
+    @PutMapping("/update")
+    public ResponseEntity<UserDto> updateUser(@RequestBody UserDto userDto){
+        return new ResponseEntity<>(userService.updateUser(userDto), HttpStatus.OK);
+    }
+
+    @DeleteMapping("/delete")
+    public ResponseEntity<?> deleteUser(@RequestBody UserDto userDto){
+        userService.deleteUser(userDto);
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
+
     @GetMapping("/sorted")
     public ResponseEntity<List<UserDto>> getSortByName(){
         return new ResponseEntity<>(userService.getSortByName(), HttpStatus.OK);

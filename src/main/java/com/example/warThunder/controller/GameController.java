@@ -22,8 +22,8 @@ public class GameController {
     }
 
     @PostMapping("/{gameId}/move")
-    public ResponseEntity<MovementResultDto> makeMove(@RequestBody MovementDto movementDto, @PathVariable int gameId){
-        return new ResponseEntity<>(HttpStatus.OK);
+    public ResponseEntity<MovementResultDto> makeMove(@RequestBody MovementDto movementDto, @PathVariable long gameId){
+        return new ResponseEntity<>(gameService.makeMove(movementDto, gameId), HttpStatus.OK);
     }
 
 }

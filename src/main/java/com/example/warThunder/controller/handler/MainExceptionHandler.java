@@ -1,7 +1,6 @@
 package com.example.warThunder.controller.handler;
 
-import com.example.warThunder.exception.NotUniqueUsername;
-import com.example.warThunder.exception.UserNotExists;
+import com.example.warThunder.exception.*;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -16,20 +15,38 @@ public class MainExceptionHandler {
 
     @ExceptionHandler(NoResultException.class)
     public ResponseEntity<?> onNoResultException(NoResultException ex){
-        log.warn("Не найден результат", ex);
-        return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        log.warn("Не найден результат {}", ex.getMessage());
+        return new ResponseEntity<>("Не найден результат " + ex.getMessage(),HttpStatus.NOT_FOUND);
     }
 
-    @ExceptionHandler(NotUniqueUsername.class)
-    public ResponseEntity<?> onNotUniqueUsername(NotUniqueUsername ex){
+    @ExceptionHandler(NotUniqueUsernameException.class)
+    public ResponseEntity<?> onNotUniqueUsername(NotUniqueUsernameException ex){
         log.warn("Не уникальное имя пользователя {}", ex.getUsername());
         return new ResponseEntity<>("Не уникальное имя пользователя " + ex.getUsername(), HttpStatus.BAD_REQUEST);
     }
 
-    @ExceptionHandler(UserNotExists.class)
-    public ResponseEntity<?> onUserNotExists(UserNotExists ex){
+    @ExceptionHandler(UserNotExistsException.class)
+    public ResponseEntity<?> onUserNotExists(UserNotExistsException ex){
         log.warn("Пользователя не существует {}", ex.getUsername());
-        return new ResponseEntity<>("Пользоваетял не существует " + ex.getUsername(), HttpStatus.BAD_REQUEST);
+        return new ResponseEntity<>("Пользователя не существует " + ex.getUsername(), HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler(WrongUserGameException.class)
+    public ResponseEntity<?> onWrongUserGameException (WrongUserGameException exception){
+        log.warn(exception.getMessage());
+        return new ResponseEntity<>(exception.getMessage(), HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler(WrongUserTurnException.class)
+    public ResponseEntity<?> onWrongUserTurnException (WrongUserTurnException exception){
+        log.warn("Ход не того пользователя");
+        return new ResponseEntity<>("Ход не правильного пользователя", HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler(WrongShootPointException.class)
+    public ResponseEntity<?> onWrongShootPointException (WrongShootPointException exception){
+        log.warn(exception.getMessage());
+        return new ResponseEntity<>(exception.getMessage(), HttpStatus.BAD_REQUEST);
     }
 
 }

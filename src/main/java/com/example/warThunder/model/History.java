@@ -16,11 +16,16 @@ import java.util.List;
 public class History extends AbstractEntity{
 
     @OneToOne
+    @JoinColumn(name = "game_id")
     private Game game;
 
     @ManyToMany
+    @JoinTable(
+            joinColumns = @JoinColumn(name = "history_id"),
+            inverseJoinColumns = @JoinColumn(name = "user_id")
+    )
     private List<User> users;
 
-    @OneToMany
+    @OneToMany(mappedBy = "history")
     private List<Movement> movements;
 }

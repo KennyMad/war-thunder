@@ -28,27 +28,23 @@ public abstract class AbstractDao<T extends AbstractEntity> implements Dao<T> {
 
     protected abstract Class<T> getEntityClass();
 
-    @Transactional
     @Override
-    public T save(T entity) {
+    public void save(T entity) {
         log.info("Сохранение объекта: " + entity);
-        return entityManager.merge(entity);
+        entityManager.persist(entity);
     }
 
-    @Transactional
     @Override
-    public List<T> saveAll(List<T> entities){
-        return entities.stream().map(this::save).collect(Collectors.toList());
+    public void saveAll(List<T> entities){
+        entities.forEach(this::save);
     }
 
-    @Transactional
     @Override
     public T update(T entity) {
         log.info("Обновление объекта класса " + getEntityClass().getSimpleName() + " объектом: " + entity);
         return entityManager.merge(entity);
     }
 
-    @Transactional
     @Override
     public void delete(Long id) {
         log.info("Удаление объекта класса " + getEntityClass().getSimpleName() + " id=" + id);

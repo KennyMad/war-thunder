@@ -13,5 +13,6 @@ import java.util.List;
 public class FieldDto {
 
     private Long id;
-    private List<Cell> battlefield;
+    private List<CellDto> battlefield;
+    private Long ownerId;
 }

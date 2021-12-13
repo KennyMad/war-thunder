@@ -1,6 +1,9 @@
 package com.example.warThunder.service.impl;
 
-import com.example.warThunder.exception.UserNotExists;
+import com.example.warThunder.exception.UserNotExistsException;
+import com.example.warThunder.exception.WrongShootPointException;
+import com.example.warThunder.exception.WrongUserGameException;
+import com.example.warThunder.exception.WrongUserTurnException;
 import com.example.warThunder.model.*;
 import com.example.warThunder.repository.*;
 import com.example.warThunder.service.GameService;
@@ -12,7 +15,9 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
+import javax.transaction.Transactional;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Random;
 import java.util.stream.Collectors;
@@ -27,18 +32,21 @@ public class GameServiceImpl implements GameService {
     private final CellDao cellDao;
     private final UserDao userDao;
     private final ShipDao shipDao;
+    private final GameDao gameDao;
+    private final MovementDao movementDao;
 
     private final UserMapper userMapper;
     private final FieldMapper fieldMapper;
     private final GameMapper gameMapper;
 
+    @Transactional
     @Override
     public GameDto createGame(List<UserDto> players){
         List<User> usersForCheck = players.stream().map(userMapper::toEntity).collect(Collectors.toList());
         List<User> users = new ArrayList<>();
         for (int i = 0; i < players.size(); i++){
             if (!userDao.isUsernameExist(usersForCheck.get(i).getName())){
-                throw new UserNotExists(usersForCheck.get(i).getName());
+                throw new UserNotExistsException(usersForCheck.get(i).getName());
             }
             else {
                 users.add(userDao.getUserByUsername(usersForCheck.get(i).getName()));
@@ -48,37 +56,86 @@ public class GameServiceImpl implements GameService {
         Field field1 = new Field();
         Field field2 = new Field();
 
-        field1.setCells(cellDao.saveAll(generateEmptyCells()));
-        field2.setCells(cellDao.saveAll(generateEmptyCells()));
+        List<Cell> cells1 = generateEmptyCells();
+        List<Cell> cells2 = generateEmptyCells();
+        cellDao.saveAll(cells1);
+        cellDao.saveAll(cells2);
+
+        field1.setCells(cells1);
+        field2.setCells(cells2);
 
         field1 = generateShips(field1);
         field2 = generateShips(field2);
 
-        field1.setCells(field1.getCells());
-        field2.setCells(field2.getCells());
+        field1.setOwnerId(users.get(0).getId());
+        field2.setOwnerId(users.get(1).getId());
+
+        fieldDao.save(field1);
+        fieldDao.save(field2);
 
         List<Field> fields = new ArrayList<>();
-        long field1Id = fieldDao.save(field1).getId();
-        long field2Id = fieldDao.save(field2).getId();
-        fields.add(fieldDao.getById(field1Id));
-        fields.add(fieldDao.getById(field2Id));
+        fields.add(field1);
+        fields.add(field2);
 
         History history = new History();
         history.setUsers(users);
         history.setMovements(new ArrayList<>());
         history.setUsers(users);
-        history = historyDao.save(history);
         Game game = new Game();
         game.setHistory(history);
         game.setUsers(users);
         game.setFields(fields);
+        gameDao.save(game);
+        historyDao.save(history);
 
         return gameMapper.toDto(game);
     }
 
+    @Transactional
     @Override
-    public MovementResultDto makeMove(MovementDto movementDto, int fieldId) {
-        return null;
+    public MovementResultDto makeMove(MovementDto movementDto, long gameId) {
+        Game game = gameDao.getById(gameId);
+        User user = userDao.getById(movementDto.getUserId());
+        if (user == null || !game.getUsers().contains(user)){
+            throw new WrongUserGameException("Пользователь не найден либо не играет id=" + movementDto.getUserId());
+        }
+        History history = game.getHistory();
+        int turn = 1;
+        if (history.getMovements().size() != 0){
+            Movement lastMovement = history.getMovements().stream().max(new Comparator<Movement>() {
+                @Override
+                public int compare(Movement o1, Movement o2) {
+                    return Integer.compare(o1.getTurnNumber(), o2.getTurnNumber());
+                }
+            }).get();
+            if (lastMovement.getUserId().equals(user.getId())){
+                throw new WrongUserTurnException();
+            }
+            turn = lastMovement.getTurnNumber() + 1;
+        }
+
+        Field fieldToShoot;
+        if (game.getFields().get(0).getOwnerId() == movementDto.getUserId()){
+            fieldToShoot = game.getFields().get(1);
+        }
+        else {
+            fieldToShoot = game.getFields().get(0);
+        }
+
+        Cell cellToShoot = fieldToShoot.getCells().stream()
+                .filter(cell -> cell.getX() == movementDto.getX() && cell.getY() == movementDto.getY()).findFirst().orElse(null);
+        if (cellToShoot == null || cellToShoot.isShooted()){
+            throw new WrongShootPointException(movementDto.getX(), movementDto.getY());
+        }
+        cellToShoot.setShooted(true);
+        cellDao.update(cellToShoot);
+        if (cellToShoot.getShip() == null){
+            return MovementResultDto.builder().hit(false).win(false).build();
+        }
+        return MovementResultDto.builder()
+                .hit(true)
+                .win(fieldToShoot.getCells().stream().noneMatch(cell -> cell.getShip() != null && cell.isShooted()))
+                .build();
     }
 
     private List<Cell> generateEmptyCells(){
@@ -139,7 +196,7 @@ public class GameServiceImpl implements GameService {
                 for (Cell shipCell : shipCells) {
                     if (shipCell.getX() == field.getCells().get(i).getX()
                             && shipCell.getY() == field.getCells().get(i).getY()) {
-                        ship.getCells().add(field.getCells().get(i));
+                        field.getCells().get(i).setShip(ship);
                     }
                 }
             }

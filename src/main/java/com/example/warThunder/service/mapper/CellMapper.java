@@ -19,7 +19,7 @@ public class CellMapper {
         cellDto.setId(cell.getId());
         cellDto.setShipDto(shipMapper.toDto(cell.getShip()));
         cellDto.setShooted(cell.isShooted());
-        cellDto.setX(cellDto.getX());
+        cellDto.setX(cell.getX());
         cellDto.setY(cell.getY());
 
         return cellDto;

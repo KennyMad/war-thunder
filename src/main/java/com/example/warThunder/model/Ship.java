@@ -16,7 +16,7 @@ import java.util.List;
 @NoArgsConstructor
 public class Ship extends AbstractEntity{
 
-    @OneToMany
+    @OneToMany(mappedBy = "ship")
     private List<Cell> cells;
 
     private Integer size;

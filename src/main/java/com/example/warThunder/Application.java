@@ -21,9 +21,4 @@ public class Application {
 		SpringApplication.run(Application.class, args);
 	}
 
-	/*@Bean
-	public EntityManager getEntityManager(){
-		EntityManagerFactory emf = Persistence.createEntityManagerFactory("u");
-		return emf.createEntityManager();
-	}*/
 }
