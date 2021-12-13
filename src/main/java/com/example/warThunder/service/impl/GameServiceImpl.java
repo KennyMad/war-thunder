@@ -1,6 +1,5 @@
 package com.example.warThunder.service.impl;
 
-import com.example.warThunder.exception.NotUniqueUsername;
 import com.example.warThunder.exception.UserNotExists;
 import com.example.warThunder.model.*;
 import com.example.warThunder.repository.*;
@@ -9,16 +8,10 @@ import com.example.warThunder.service.dto.*;
 import com.example.warThunder.service.mapper.FieldMapper;
 import com.example.warThunder.service.mapper.GameMapper;
 import com.example.warThunder.service.mapper.UserMapper;
-import lombok.Data;
-import lombok.Getter;
 import lombok.RequiredArgsConstructor;
-import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import javax.persistence.Table;
-import java.sql.Struct;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
@@ -29,23 +22,15 @@ import java.util.stream.Collectors;
 @Slf4j
 public class GameServiceImpl implements GameService {
 
-    @Autowired
-    FieldDao fieldDao;
-    @Autowired
-    HistoryDao historyDao;
-    @Autowired
-    CellDao cellDao;
-    @Autowired
-    UserDao userDao;
-    @Autowired
-    ShipDao shipDao;
+    private final FieldDao fieldDao;
+    private final HistoryDao historyDao;
+    private final CellDao cellDao;
+    private final UserDao userDao;
+    private final ShipDao shipDao;
 
-    @Autowired
-    UserMapper userMapper;
-    @Autowired
-    FieldMapper fieldMapper;
-    @Autowired
-    GameMapper gameMapper;
+    private final UserMapper userMapper;
+    private final FieldMapper fieldMapper;
+    private final GameMapper gameMapper;
 
     @Override
     public GameDto createGame(List<UserDto> players){

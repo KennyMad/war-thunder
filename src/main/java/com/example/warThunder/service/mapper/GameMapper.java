@@ -2,21 +2,18 @@ package com.example.warThunder.service.mapper;
 
 import com.example.warThunder.model.Game;
 import com.example.warThunder.service.dto.GameDto;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
-import java.util.Arrays;
 import java.util.stream.Collectors;
 
 @Component
+@RequiredArgsConstructor
 public class GameMapper {
 
-    @Autowired
-    FieldMapper fieldMapper;
-    @Autowired
-    HistoryMapper historyMapper;
-    @Autowired
-    UserMapper userMapper;
+    private final FieldMapper fieldMapper;
+    private final HistoryMapper historyMapper;
+    private final UserMapper userMapper;
 
     public Game toEntity(GameDto gameDto){
         if (gameDto == null){
