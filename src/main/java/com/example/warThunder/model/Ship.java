@@ -5,6 +5,7 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.OneToMany;
 import java.util.List;
@@ -16,7 +17,7 @@ import java.util.List;
 @NoArgsConstructor
 public class Ship extends AbstractEntity{
 
-    @OneToMany(mappedBy = "ship")
+    @OneToMany(mappedBy = "ship", cascade = CascadeType.ALL)
     private List<Cell> cells;
 
     private Integer size;

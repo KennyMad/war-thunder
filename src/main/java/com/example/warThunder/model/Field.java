@@ -16,10 +16,10 @@ import java.util.List;
 @Data
 public class Field extends AbstractEntity{
 
-    @OneToMany(mappedBy = "field")
+    @OneToMany(mappedBy = "field", cascade = CascadeType.ALL)
     private List<Cell> cells;
 
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "game_fk")
     private Game game;
 

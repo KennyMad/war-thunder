@@ -78,15 +78,15 @@ public class GameServiceImpl implements GameService {
         fields.add(field2);
 
         History history = new History();
-        history.setUsers(users);
         history.setMovements(new ArrayList<>());
-        history.setUsers(users);
+        historyDao.save(history);
+        users.get(0).getGameHistory().add(history);
+        users.get(1).getGameHistory().add(history);
         Game game = new Game();
         game.setHistory(history);
         game.setUsers(users);
         game.setFields(fields);
         gameDao.save(game);
-        historyDao.save(history);
 
         return gameMapper.toDto(game);
     }
@@ -124,17 +124,17 @@ public class GameServiceImpl implements GameService {
 
         Cell cellToShoot = fieldToShoot.getCells().stream()
                 .filter(cell -> cell.getX() == movementDto.getX() && cell.getY() == movementDto.getY()).findFirst().orElse(null);
-        if (cellToShoot == null || cellToShoot.isShooted()){
+        if (cellToShoot == null || cellToShoot.isShot()){
             throw new WrongShootPointException(movementDto.getX(), movementDto.getY());
         }
-        cellToShoot.setShooted(true);
+        cellToShoot.setShot(true);
         cellDao.update(cellToShoot);
         if (cellToShoot.getShip() == null){
             return MovementResultDto.builder().hit(false).win(false).build();
         }
         return MovementResultDto.builder()
                 .hit(true)
-                .win(fieldToShoot.getCells().stream().noneMatch(cell -> cell.getShip() != null && cell.isShooted()))
+                .win(fieldToShoot.getCells().stream().noneMatch(cell -> cell.getShip() != null && cell.isShot()))
                 .build();
     }
 
@@ -145,7 +145,7 @@ public class GameServiceImpl implements GameService {
                 Cell cell = new Cell();
                 cell.setX((char)(i + '0'));
                 cell.setY((char)(j + '0'));
-                cell.setShooted(false);
+                cell.setShot(false);
                 cells.add(cell);
             }
         }

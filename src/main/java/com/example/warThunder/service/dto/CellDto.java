@@ -10,7 +10,7 @@ public class CellDto {
     private char x;
     private char y;
 
-    private boolean isShooted;
+    private boolean isShot;
     private ShipDto shipDto;
 
 }

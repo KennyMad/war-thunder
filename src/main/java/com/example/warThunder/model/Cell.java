@@ -13,13 +13,14 @@ import java.util.Objects;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
+@Entity
 public class Cell extends AbstractEntity {
 
     private char x;
     private char y;
 
     @Column
-    private boolean shooted = false;
+    private boolean shot = false;
 
     @ManyToOne
     @JoinColumn(name = "field_fk")
