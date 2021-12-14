@@ -14,39 +14,45 @@ import javax.persistence.NoResultException;
 public class MainExceptionHandler {
 
     @ExceptionHandler(NoResultException.class)
-    public ResponseEntity<?> onNoResultException(NoResultException ex){
+    public ResponseEntity<?> onNoResultException(NoResultException ex) {
         log.warn("Не найден результат {}", ex.getMessage());
-        return new ResponseEntity<>("Не найден результат " + ex.getMessage(),HttpStatus.NOT_FOUND);
+        return new ResponseEntity<>("Не найден результат " + ex.getMessage(), HttpStatus.NOT_FOUND);
     }
 
     @ExceptionHandler(NotUniqueUsernameException.class)
-    public ResponseEntity<?> onNotUniqueUsername(NotUniqueUsernameException ex){
+    public ResponseEntity<?> onNotUniqueUsername(NotUniqueUsernameException ex) {
         log.warn("Не уникальное имя пользователя {}", ex.getUsername());
         return new ResponseEntity<>("Не уникальное имя пользователя " + ex.getUsername(), HttpStatus.BAD_REQUEST);
     }
 
     @ExceptionHandler(UserNotExistsException.class)
-    public ResponseEntity<?> onUserNotExists(UserNotExistsException ex){
+    public ResponseEntity<?> onUserNotExists(UserNotExistsException ex) {
         log.warn("Пользователя не существует {}", ex.getUsername());
         return new ResponseEntity<>("Пользователя не существует " + ex.getUsername(), HttpStatus.BAD_REQUEST);
     }
 
     @ExceptionHandler(WrongUserGameException.class)
-    public ResponseEntity<?> onWrongUserGameException (WrongUserGameException exception){
+    public ResponseEntity<?> onWrongUserGameException(WrongUserGameException exception) {
         log.warn(exception.getMessage());
         return new ResponseEntity<>(exception.getMessage(), HttpStatus.BAD_REQUEST);
     }
 
     @ExceptionHandler(WrongUserTurnException.class)
-    public ResponseEntity<?> onWrongUserTurnException (WrongUserTurnException exception){
+    public ResponseEntity<?> onWrongUserTurnException(WrongUserTurnException exception) {
         log.warn("Ход не того пользователя");
         return new ResponseEntity<>("Ход не правильного пользователя", HttpStatus.BAD_REQUEST);
     }
 
     @ExceptionHandler(WrongShootPointException.class)
-    public ResponseEntity<?> onWrongShootPointException (WrongShootPointException exception){
+    public ResponseEntity<?> onWrongShootPointException(WrongShootPointException exception) {
         log.warn(exception.getMessage());
         return new ResponseEntity<>(exception.getMessage(), HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler(Exception.class)
+    public ResponseEntity<?> onException(Exception e) {
+        log.error("Unexpected exception error", e);
+        return new ResponseEntity("Unexpected exception error", HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
 }

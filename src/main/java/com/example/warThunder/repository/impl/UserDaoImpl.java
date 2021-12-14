@@ -47,19 +47,19 @@ public class UserDaoImpl extends AbstractDao<User> implements UserDao {
         Root<User> root = query.from(getEntityClass());
         Predicate usernamePredicate = builder.equal(root.get("name"), user.getName());
         Predicate passPredicate = builder.equal(root.get("password"), user.getPassword());
-        query.select(root).where(builder.and(usernamePredicate,passPredicate));
+        query.select(root).where(builder.and(usernamePredicate, passPredicate));
         return getEntityManager().createQuery(query).getSingleResult();
     }
 
     @Override
     @Transactional
-    public boolean isUsernameExist(String username){
+    public boolean isUsernameExist(String username) {
         log.info("Проверка на существование пользователя с именем: " + username);
         return getAll().stream().anyMatch(user -> Objects.equals(user.getName(), username));
     }
 
     @Override
-    public List<User> getSortByName(){
+    public List<User> getSortByName() {
         log.info("Сортировка пользователей по имени");
         List<User> allUsers = getAll();
         Comparator nameComparator = new NameComparator();

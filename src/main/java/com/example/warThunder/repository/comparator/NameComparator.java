@@ -1,5 +1,7 @@
 package com.example.warThunder.repository.comparator;
+
 import java.util.Comparator;
+
 import com.example.warThunder.model.User;
 
 public class NameComparator implements Comparator<User> {

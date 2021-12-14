@@ -6,7 +6,8 @@ public class WrongShootPointException extends RuntimeException {
 
     @Getter
     private String message;
-    public WrongShootPointException (char x, char y){
+
+    public WrongShootPointException(char x, char y) {
         message = "Wrong point x: " + x + " y: " + y;
     }
 

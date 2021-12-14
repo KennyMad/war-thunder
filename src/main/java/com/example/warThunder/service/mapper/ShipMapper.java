@@ -8,8 +8,8 @@ import org.springframework.stereotype.Component;
 @Component
 public class ShipMapper {
 
-    public Ship toEntity(ShipDto shipDto){
-        if (shipDto == null){
+    public Ship toEntity(ShipDto shipDto) {
+        if (shipDto == null) {
             return null;
         }
         Ship ship = new Ship();
@@ -19,8 +19,8 @@ public class ShipMapper {
         return ship;
     }
 
-    public ShipDto toDto(Ship ship){
-        if (ship == null){
+    public ShipDto toDto(Ship ship) {
+        if (ship == null) {
             return null;
         }
         ShipDto shipDto = new ShipDto();

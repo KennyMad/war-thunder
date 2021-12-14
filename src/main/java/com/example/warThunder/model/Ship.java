@@ -15,9 +15,9 @@ import java.util.List;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class Ship extends AbstractEntity{
+public class Ship extends AbstractEntity {
 
-    @OneToMany(mappedBy = "ship", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "ship")
     private List<Cell> cells;
 
     private Integer size;

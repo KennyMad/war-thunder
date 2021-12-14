@@ -11,8 +11,8 @@ public class CellMapper {
     @Autowired
     ShipMapper shipMapper;
 
-    public CellDto toDto(Cell cell){
-        if (cell == null){
+    public CellDto toDto(Cell cell) {
+        if (cell == null) {
             return null;
         }
         CellDto cellDto = new CellDto();
@@ -25,8 +25,8 @@ public class CellMapper {
         return cellDto;
     }
 
-    public Cell toEntity(CellDto cellDto){
-        if (cellDto == null){
+    public Cell toEntity(CellDto cellDto) {
+        if (cellDto == null) {
             return null;
         }
         Cell cell = new Cell();

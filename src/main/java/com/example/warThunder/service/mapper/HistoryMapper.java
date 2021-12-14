@@ -13,29 +13,27 @@ public class HistoryMapper {
 
     private final MovementMapper movementMapper;
 
-    public History toEntity(HistoryDto historyDto){
-        if (historyDto == null){
+    public History toEntity(HistoryDto historyDto) {
+        if (historyDto == null) {
             return null;
         }
         History history = new History();
-        if (historyDto.getMovements() == null){
+        if (historyDto.getMovements() == null) {
             history.setMovements(null);
-        }
-        else {
+        } else {
             history.setMovements(historyDto.getMovements().stream().map(movementMapper::toEntity).collect(Collectors.toList()));
         }
         return new History();
     }
 
-    public HistoryDto toDto(History history){
-        if (history == null){
+    public HistoryDto toDto(History history) {
+        if (history == null) {
             return null;
         }
         HistoryDto historyDto = new HistoryDto();
-        if (history.getMovements() == null){
+        if (history.getMovements() == null) {
             historyDto.setMovements(null);
-        }
-        else {
+        } else {
             historyDto.setMovements(history.getMovements().stream().map(movementMapper::toDto).collect(Collectors.toList()));
         }
         return historyDto;

@@ -13,8 +13,8 @@ public class UserMapper {
     @Autowired
     HistoryMapper historyMapper;
 
-    public User toEntity(UserDto userDto){
-        if (userDto == null){
+    public User toEntity(UserDto userDto) {
+        if (userDto == null) {
             return null;
         }
 
@@ -22,19 +22,12 @@ public class UserMapper {
         user.setId(userDto.getId());
         user.setName(userDto.getUsername());
         user.setPassword(userDto.getPassword());
-        if (userDto.getGameHistory() == null){
-            user.setGameHistory(null);
-        }
-        else {
-            user.setGameHistory(userDto.getGameHistory().stream()
-                    .map(historyDto -> historyMapper.toEntity(historyDto))
-                    .collect(Collectors.toList()));
-        }
+
         return user;
     }
 
-    public UserDto toDto(User user){
-        if (user == null){
+    public UserDto toDto(User user) {
+        if (user == null) {
             return null;
         }
 
@@ -42,14 +35,7 @@ public class UserMapper {
         userDto.setId(user.getId());
         userDto.setUsername(user.getName());
         userDto.setPassword(user.getPassword());
-        if (user.getGameHistory() == null){
-            user.setGameHistory(null);
-        }
-        else {
-            userDto.setGameHistory(user.getGameHistory().stream()
-                    .map(history -> historyMapper.toDto(history))
-                    .collect(Collectors.toList()));
-        }
+
         return userDto;
     }
 

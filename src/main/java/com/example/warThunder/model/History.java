@@ -13,18 +13,11 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 @Data
-public class History extends AbstractEntity{
+public class History extends AbstractEntity {
 
-    @OneToOne(cascade = CascadeType.ALL)
+    @OneToOne
     @JoinColumn(name = "game_id")
     private Game game;
-
-    @ManyToMany(cascade = CascadeType.ALL)
-    @JoinTable(
-            joinColumns = @JoinColumn(name = "history_id"),
-            inverseJoinColumns = @JoinColumn(name = "user_id")
-    )
-    private List<User> users;
 
     @OneToMany(mappedBy = "history", cascade = CascadeType.ALL)
     private List<Movement> movements;

@@ -48,7 +48,7 @@ public class UserServiceImpl implements UserService {
     public UserDto updateUser(UserDto userDto) {
         log.info("Обновление данных пользователя {}", userDto);
         User userInDb = userDao.getById(userDto.getId());
-        if (userInDb == null){
+        if (userInDb == null) {
             throw new UserNotExistsException(userDto.getId());
         }
         userInDb.setName(userDto.getUsername());
@@ -61,7 +61,7 @@ public class UserServiceImpl implements UserService {
     public void deleteUser(UserDto userDto) {
         log.info("Удаление пользователя {}", userDto);
         User user = userDao.getUserByNamePass(userMapper.toEntity(userDto));
-        if (user == null){
+        if (user == null) {
             throw new UserNotExistsException(userDto.getUsername());
         }
         userDao.delete(user.getId());
@@ -74,7 +74,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public List<UserDto> getSortByName(){
+    public List<UserDto> getSortByName() {
         log.info("Получение пользователей отсортированных по имени ");
         return userDao.getSortByName().stream().map(userMapper::toDto).collect(Collectors.toList());
     }

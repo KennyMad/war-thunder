@@ -15,47 +15,43 @@ public class GameMapper {
     private final HistoryMapper historyMapper;
     private final UserMapper userMapper;
 
-    public Game toEntity(GameDto gameDto){
-        if (gameDto == null){
+    public Game toEntity(GameDto gameDto) {
+        if (gameDto == null) {
             return null;
         }
         Game game = new Game();
-        if (gameDto.getFields() == null){
+        if (gameDto.getFields() == null) {
             game.setFields(null);
-        }
-        else {
+        } else {
             game.setFields(gameDto.getFields().stream().map(fieldMapper::toEntity).collect(Collectors.toList()));
         }
         game.setId(gameDto.getId());
         game.setHistory(historyMapper.toEntity(gameDto.getHistoryDto()));
-        if (gameDto.getPlayers() == null){
+        if (gameDto.getPlayers() == null) {
             game.setUsers(null);
-        }
-        else {
+        } else {
             game.setUsers(gameDto.getPlayers().stream().map(userMapper::toEntity).collect(Collectors.toList()));
         }
 
         return game;
     }
-    //кажется сделал функцию заполнение кораблями поля, теперь где ее прописать
-    public GameDto toDto(Game game){
-        if (game == null){
+
+    public GameDto toDto(Game game) {
+        if (game == null) {
             return null;
         }
 
         GameDto gameDto = new GameDto();
-        if (game.getFields() == null){
+        if (game.getFields() == null) {
             gameDto.setFields(null);
-        }
-        else {
+        } else {
             gameDto.setFields(game.getFields().stream().map(fieldMapper::toDto).collect(Collectors.toList()));
         }
         gameDto.setId(game.getId());
         gameDto.setHistoryDto(historyMapper.toDto(game.getHistory()));
-        if (game.getUsers() == null){
+        if (game.getUsers() == null) {
             gameDto.setPlayers(null);
-        }
-        else {
+        } else {
             gameDto.setPlayers(game.getUsers().stream().map(userMapper::toDto).collect(Collectors.toList()));
         }
 

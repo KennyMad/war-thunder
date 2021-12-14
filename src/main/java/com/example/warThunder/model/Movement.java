@@ -14,7 +14,7 @@ import javax.persistence.ManyToOne;
 @AllArgsConstructor
 @NoArgsConstructor
 @Data
-public class Movement extends AbstractEntity{
+public class Movement extends AbstractEntity {
 
     private char x;
     private char y;

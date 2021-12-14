@@ -17,12 +17,12 @@ public class GameController {
     private final GameService gameService;
 
     @PostMapping("/create")
-    public ResponseEntity<GameDto> createGame(@RequestBody List<UserDto> players){
+    public ResponseEntity<GameDto> createGame(@RequestBody List<UserDto> players) {
         return new ResponseEntity<>(gameService.createGame(players), HttpStatus.OK);
     }
 
     @PostMapping("/{gameId}/move")
-    public ResponseEntity<MovementResultDto> makeMove(@RequestBody MovementDto movementDto, @PathVariable long gameId){
+    public ResponseEntity<MovementResultDto> makeMove(@RequestBody MovementDto movementDto, @PathVariable long gameId) {
         return new ResponseEntity<>(gameService.makeMove(movementDto, gameId), HttpStatus.OK);
     }
 

@@ -14,11 +14,10 @@ import javax.persistence.Persistence;
 
 @SpringBootApplication
 @EnableTransactionManagement
-@EntityScan("com.example.warThunder.model")
 public class Application {
 
-	public static void main(String[] args) {
-		SpringApplication.run(Application.class, args);
-	}
+    public static void main(String[] args) {
+        SpringApplication.run(Application.class, args);
+    }
 
 }

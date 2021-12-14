@@ -41,14 +41,13 @@ public class GameServiceImpl implements GameService {
 
     @Transactional
     @Override
-    public GameDto createGame(List<UserDto> players){
+    public GameDto createGame(List<UserDto> players) {
         List<User> usersForCheck = players.stream().map(userMapper::toEntity).collect(Collectors.toList());
         List<User> users = new ArrayList<>();
-        for (int i = 0; i < players.size(); i++){
-            if (!userDao.isUsernameExist(usersForCheck.get(i).getName())){
+        for (int i = 0; i < players.size(); i++) {
+            if (!userDao.isUsernameExist(usersForCheck.get(i).getName())) {
                 throw new UserNotExistsException(usersForCheck.get(i).getName());
-            }
-            else {
+            } else {
                 users.add(userDao.getUserByUsername(usersForCheck.get(i).getName()));
             }
         }
@@ -80,12 +79,11 @@ public class GameServiceImpl implements GameService {
         History history = new History();
         history.setMovements(new ArrayList<>());
         historyDao.save(history);
-        users.get(0).getGameHistory().add(history);
-        users.get(1).getGameHistory().add(history);
         Game game = new Game();
-        game.setHistory(history);
         game.setUsers(users);
-        game.setFields(fields);
+        history.setGame(game);
+        fields.get(0).setGame(game);
+        fields.get(1).setGame(game);
         gameDao.save(game);
 
         return gameMapper.toDto(game);
@@ -96,40 +94,42 @@ public class GameServiceImpl implements GameService {
     public MovementResultDto makeMove(MovementDto movementDto, long gameId) {
         Game game = gameDao.getById(gameId);
         User user = userDao.getById(movementDto.getUserId());
-        if (user == null || !game.getUsers().contains(user)){
+        if (user == null || !game.getUsers().contains(user)) {
             throw new WrongUserGameException("Пользователь не найден либо не играет id=" + movementDto.getUserId());
         }
         History history = game.getHistory();
         int turn = 1;
-        if (history.getMovements().size() != 0){
-            Movement lastMovement = history.getMovements().stream().max(new Comparator<Movement>() {
-                @Override
-                public int compare(Movement o1, Movement o2) {
-                    return Integer.compare(o1.getTurnNumber(), o2.getTurnNumber());
-                }
-            }).get();
-            if (lastMovement.getUserId().equals(user.getId())){
+        if (history.getMovements().size() != 0) {
+            Movement lastMovement = history.getMovements().stream()
+                    .max(Comparator.comparingInt(Movement::getTurnNumber)).get();
+            if (lastMovement.getUserId().equals(user.getId())) {
                 throw new WrongUserTurnException();
             }
             turn = lastMovement.getTurnNumber() + 1;
         }
 
         Field fieldToShoot;
-        if (game.getFields().get(0).getOwnerId() == movementDto.getUserId()){
+        if (game.getFields().get(0).getOwnerId() == movementDto.getUserId()) {
             fieldToShoot = game.getFields().get(1);
-        }
-        else {
+        } else {
             fieldToShoot = game.getFields().get(0);
         }
 
         Cell cellToShoot = fieldToShoot.getCells().stream()
                 .filter(cell -> cell.getX() == movementDto.getX() && cell.getY() == movementDto.getY()).findFirst().orElse(null);
-        if (cellToShoot == null || cellToShoot.isShot()){
+        if (cellToShoot == null || cellToShoot.isShot()) {
             throw new WrongShootPointException(movementDto.getX(), movementDto.getY());
         }
         cellToShoot.setShot(true);
         cellDao.update(cellToShoot);
-        if (cellToShoot.getShip() == null){
+        Movement movement = new Movement();
+        movement.setX(movementDto.getX());
+        movement.setY(movementDto.getY());
+        movement.setUserId(movementDto.getUserId());
+        movement.setTurnNumber(turn);
+        history.getMovements().add(movement);
+        historyDao.update(history);
+        if (cellToShoot.getShip() == null) {
             return MovementResultDto.builder().hit(false).win(false).build();
         }
         return MovementResultDto.builder()
@@ -138,13 +138,13 @@ public class GameServiceImpl implements GameService {
                 .build();
     }
 
-    private List<Cell> generateEmptyCells(){
+    private List<Cell> generateEmptyCells() {
         List<Cell> cells = new ArrayList<>();
-        for (int i = 0; i < 10; i++){
+        for (int i = 0; i < 10; i++) {
             for (int j = 0; j < 10; j++) {
                 Cell cell = new Cell();
-                cell.setX((char)(i + '0'));
-                cell.setY((char)(j + '0'));
+                cell.setX((char) (i + '0'));
+                cell.setY((char) (j + '0'));
                 cell.setShot(false);
                 cells.add(cell);
             }
@@ -152,43 +152,42 @@ public class GameServiceImpl implements GameService {
         return cells;
     }
 
-    private Field generateShips(Field field){
+    private Field generateShips(Field field) {
         int[][] bufField = new int[field.getCells().size()][field.getCells().size()];
         ships(bufField);
         List<Ship> ships = new ArrayList<>();
         for (int i = 0; i < 10; i++) {
             for (int k = 0; k < 10; k++) {
-                    if(bufField[i][k]==1){
-                        Ship ship = new Ship();
-                        List<Cell> cellsForShip = new ArrayList<>();
-                        int verticalLocation = checkForShip(bufField, i, k, 0);
-                        int horizontalLocation = checkForShip(bufField, i, k, 1);
-                        if(horizontalLocation>verticalLocation){
-                            for(int j = k; j<k+horizontalLocation; j++){
-                                cellsForShip.add(field.getCells().get((i*10)+j));
-                                bufField[i][j] = 0;
-                            }
-                        }else if(horizontalLocation<verticalLocation){
-                            for(int j = i; j<i+verticalLocation; j++){
-                                cellsForShip.add(field.getCells().get((j*10)+k));
-                                bufField[j][k] = 0;
-                            }
+                if (bufField[i][k] == 1) {
+                    Ship ship = new Ship();
+                    List<Cell> cellsForShip = new ArrayList<>();
+                    int verticalLocation = checkForShip(bufField, i, k, 0);
+                    int horizontalLocation = checkForShip(bufField, i, k, 1);
+                    if (horizontalLocation > verticalLocation) {
+                        for (int j = k; j < k + horizontalLocation; j++) {
+                            cellsForShip.add(field.getCells().get((i * 10) + j));
+                            bufField[i][j] = 0;
                         }
-                        else{
-                            cellsForShip.add(field.getCells().get((i*10)+k));//////////////
-                            bufField[i][k] = 0;
+                    } else if (horizontalLocation < verticalLocation) {
+                        for (int j = i; j < i + verticalLocation; j++) {
+                            cellsForShip.add(field.getCells().get((j * 10) + k));
+                            bufField[j][k] = 0;
                         }
-                        ship.setSize(cellsForShip.size());
-                        ship.setCells(cellsForShip);
-                        ships.add(ship);
-
+                    } else {
+                        cellsForShip.add(field.getCells().get((i * 10) + k));
+                        bufField[i][k] = 0;
                     }
+                    ship.setSize(cellsForShip.size());
+                    ship.setCells(cellsForShip);
+                    ships.add(ship);
+
+                }
             }
         }
         return fillField(field, ships);
     }
 
-    private Field fillField(Field field, List<Ship> ships){
+    private Field fillField(Field field, List<Ship> ships) {
         for (Ship ship : ships) {
             List<Cell> shipCells = ship.getCells();
             ship.setCells(new ArrayList<>());
@@ -206,13 +205,13 @@ public class GameServiceImpl implements GameService {
     }
 
 
-    private int checkForShip(int[][] bufField, int y, int x, int isHorizontal){
+    private int checkForShip(int[][] bufField, int y, int x, int isHorizontal) {
         int size = 0;
-        while(bufField[y][x]==1){
+        while (bufField[y][x] == 1) {
             size++;
-            if(isHorizontal==1){
+            if (isHorizontal == 1) {
                 x++;
-            }else {
+            } else {
                 y++;
             }
         }

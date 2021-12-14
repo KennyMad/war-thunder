@@ -14,14 +14,14 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 @Data
-public class Field extends AbstractEntity{
+public class Field extends AbstractEntity {
 
     @OneToMany(mappedBy = "field", cascade = CascadeType.ALL)
     private List<Cell> cells;
 
-    @ManyToOne(cascade = CascadeType.ALL)
+    @ManyToOne
     @JoinColumn(name = "game_fk")
     private Game game;
 
-    private long ownerId;
+    private Long ownerId;
 }

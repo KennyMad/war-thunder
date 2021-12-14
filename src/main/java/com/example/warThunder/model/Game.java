@@ -13,7 +13,7 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
-public class Game extends AbstractEntity{
+public class Game extends AbstractEntity {
 
     @OneToMany(mappedBy = "game", cascade = CascadeType.ALL)
     private List<Field> fields;
@@ -23,8 +23,8 @@ public class Game extends AbstractEntity{
 
     @ManyToMany(cascade = CascadeType.ALL)
     @JoinTable(
-            joinColumns = @JoinColumn(name = "game_id"),
-            inverseJoinColumns = @JoinColumn(name = "user_id")
+            joinColumns = @JoinColumn(name = "game_id", referencedColumnName = "id"),
+            inverseJoinColumns = @JoinColumn(name = "user_id", referencedColumnName = "id")
     )
     private List<User> users;
 

@@ -8,7 +8,7 @@ import java.util.List;
 
 @Data
 @NoArgsConstructor
-public class HistoryDto{
+public class HistoryDto {
 
     List<MovementDto> movements;
 

@@ -1,5 +1,7 @@
 package com.example.warThunder.repository;
+
 import java.util.List;
+
 import com.example.warThunder.model.User;
 
 public interface UserDao extends Dao<User> {

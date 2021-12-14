@@ -1,4 +1,4 @@
 package com.example.warThunder.exception;
 
-public class WrongUserTurnException extends RuntimeException{
+public class WrongUserTurnException extends RuntimeException {
 }

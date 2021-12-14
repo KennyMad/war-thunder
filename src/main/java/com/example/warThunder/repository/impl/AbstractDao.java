@@ -35,7 +35,7 @@ public abstract class AbstractDao<T extends AbstractEntity> implements Dao<T> {
     }
 
     @Override
-    public void saveAll(List<T> entities){
+    public void saveAll(List<T> entities) {
         entities.forEach(this::save);
     }
 

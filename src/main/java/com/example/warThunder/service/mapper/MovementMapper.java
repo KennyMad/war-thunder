@@ -7,8 +7,8 @@ import org.springframework.stereotype.Component;
 @Component
 public class MovementMapper {
 
-    public Movement toEntity(MovementDto movementDto){
-        if (movementDto == null){
+    public Movement toEntity(MovementDto movementDto) {
+        if (movementDto == null) {
             return null;
         }
         Movement movement = new Movement();
@@ -19,8 +19,8 @@ public class MovementMapper {
         return movement;
     }
 
-    public MovementDto toDto(Movement movement){
-        if (movement == null){
+    public MovementDto toDto(Movement movement) {
+        if (movement == null) {
             return null;
         }
         MovementDto movementDto = new MovementDto();

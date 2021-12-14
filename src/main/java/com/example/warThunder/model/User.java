@@ -11,17 +11,10 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 @Table(name = "users")
-public class User extends AbstractEntity{
+public class User extends AbstractEntity {
 
     private String name;
     private String password;
-
-    @ManyToMany
-    @JoinTable(
-            joinColumns = @JoinColumn(name = "user_id"),
-            inverseJoinColumns = @JoinColumn(name = "history_id")
-    )
-    private List<History> gameHistory;
 
     @ManyToMany
     @JoinTable(
