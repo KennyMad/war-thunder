@@ -16,6 +16,7 @@ public class Cell extends AbstractEntity {
 
     private boolean shot = false;
 
+    @ToString.Exclude
     @ManyToOne
     @JoinColumn(name = "field_fk")
     private Field field;

@@ -5,10 +5,10 @@ import lombok.Getter;
 public class WrongShootPointException extends RuntimeException {
 
     @Getter
-    private String message;
+    private final String message;
 
     public WrongShootPointException(char x, char y) {
-        message = "Wrong point x: " + x + " y: " + y;
+        message = "В точку x: " + x + " y: " + y + " уже стреляли";
     }
 
 }

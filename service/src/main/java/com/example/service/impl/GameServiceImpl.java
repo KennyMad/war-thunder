@@ -69,6 +69,13 @@ public class GameServiceImpl implements GameService {
         field1.setOwnerId(users.get(0).getId());
         field2.setOwnerId(users.get(1).getId());
 
+        for (Cell cell : field1.getCells()) {
+            cell.setField(field1);
+        }
+        for (Cell cell : field2.getCells()) {
+            cell.setField(field2);
+        }
+
         fieldDao.save(field1);
         fieldDao.save(field2);
 
@@ -84,7 +91,10 @@ public class GameServiceImpl implements GameService {
         history.setGame(game);
         fields.get(0).setGame(game);
         fields.get(1).setGame(game);
+        game.setFields(fields);
         gameDao.save(game);
+
+        gameDao.getById(game.getId());
 
         return gameMapper.toDto(game);
     }
@@ -127,8 +137,11 @@ public class GameServiceImpl implements GameService {
         movement.setY(movementDto.getY());
         movement.setUserId(movementDto.getUserId());
         movement.setTurnNumber(turn);
+        movement.setHistory(history);
+        movementDao.save(movement);
         history.getMovements().add(movement);
         historyDao.update(history);
+        gameDao.update(game);
         if (cellToShoot.getShip() == null) {
             return MovementResultDto.builder().hit(false).win(false).build();
         }

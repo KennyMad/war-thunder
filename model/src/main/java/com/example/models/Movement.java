@@ -1,9 +1,6 @@
 package com.example.models;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import javax.persistence.Entity;
 import javax.persistence.JoinColumn;
@@ -23,6 +20,7 @@ public class Movement extends AbstractEntity {
 
     private int turnNumber;
 
+    @ToString.Exclude
     @ManyToOne
     @JoinColumn(name = "history_fk")
     private History history;
