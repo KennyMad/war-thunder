@@ -19,4 +19,8 @@ public interface UserService {
 
     List<UserDto> getSortByName();
 
+    boolean isUsernameExist(String username);
+
+    List<UserDto> getUsersWithTurnNumber(int turnNumber);
+
 }

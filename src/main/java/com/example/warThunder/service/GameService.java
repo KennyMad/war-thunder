@@ -10,4 +10,10 @@ public interface GameService {
 
     MovementResultDto makeMove(MovementDto movementDto, long gameId);
 
+    List<GameDto> getAllGames();
+
+    GameDto updateGame(GameDto gameDto);
+
+    void deleteGame(long id);
+
 }

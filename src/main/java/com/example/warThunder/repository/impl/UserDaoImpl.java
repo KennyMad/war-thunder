@@ -5,10 +5,10 @@ import com.example.warThunder.repository.UserDao;
 import com.example.warThunder.repository.comparator.NameComparator;
 import lombok.extern.slf4j.Slf4j;
 import org.hibernate.Session;
-import org.hibernate.query.Query;
 import org.springframework.data.jpa.provider.HibernateUtils;
 import org.springframework.stereotype.Repository;
 
+import javax.persistence.Query;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Predicate;
@@ -55,15 +55,22 @@ public class UserDaoImpl extends AbstractDao<User> implements UserDao {
     @Transactional
     public boolean isUsernameExist(String username) {
         log.info("Проверка на существование пользователя с именем: " + username);
-        return getAll().stream().anyMatch(user -> Objects.equals(user.getName(), username));
+        String queryString = "select count(id) from User where name = :name";
+        return (Long)getEntityManager()
+                .createQuery(queryString)
+                .setParameter("name", username)
+                .getSingleResult() > 0;
     }
 
     @Override
     public List<User> getSortByName() {
         log.info("Сортировка пользователей по имени");
-        List<User> allUsers = getAll();
-        Comparator nameComparator = new NameComparator();
-        Collections.sort(allUsers, nameComparator);
-        return allUsers;
+        return getEntityManager().createQuery("SELECT user FROM User user ORDER BY user.name").getResultList();
+    }
+
+    @Override
+    public List<User> getUsersWithTurnNumber(int turnNumber) {
+        String queryString = "SELECT DISTINCT user FROM Movement mov, User user WHERE mov.turnNumber = :x and mov.userId = user.id";
+        return getEntityManager().createQuery(queryString).setParameter("x", turnNumber).getResultList();
     }
 }

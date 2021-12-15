@@ -78,4 +78,18 @@ public class UserServiceImpl implements UserService {
         log.info("Получение пользователей отсортированных по имени ");
         return userDao.getSortByName().stream().map(userMapper::toDto).collect(Collectors.toList());
     }
+
+    @Override
+    public boolean isUsernameExist(String username) {
+        log.info("Проверка пользователя по имени {}", username);
+        return userDao.isUsernameExist(username);
+    }
+
+    @Override
+    public List<UserDto> getUsersWithTurnNumber(int turnNumber) {
+        return userDao.getUsersWithTurnNumber(turnNumber)
+                .stream()
+                .map(userMapper::toDto)
+                .collect(Collectors.toList());
+    }
 }

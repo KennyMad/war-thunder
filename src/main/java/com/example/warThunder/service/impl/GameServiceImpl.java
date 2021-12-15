@@ -138,6 +138,26 @@ public class GameServiceImpl implements GameService {
                 .build();
     }
 
+    @Override
+    public List<GameDto> getAllGames() {
+        return gameDao.getAll()
+                .stream()
+                .map(gameMapper::toDto)
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public GameDto updateGame(GameDto gameDto) {
+        log.info("Обновление игры: {}", gameDto);
+        return gameMapper.toDto(gameDao.update(gameMapper.toEntity(gameDto)));
+    }
+
+    @Override
+    public void deleteGame(long id) {
+        log.info("Удаление игры c id={}", id);
+        gameDao.delete(id);
+    }
+
     private List<Cell> generateEmptyCells() {
         List<Cell> cells = new ArrayList<>();
         for (int i = 0; i < 10; i++) {

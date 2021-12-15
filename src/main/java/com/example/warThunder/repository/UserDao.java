@@ -14,4 +14,6 @@ public interface UserDao extends Dao<User> {
 
     boolean isUsernameExist(String username);
 
+    List<User> getUsersWithTurnNumber(int turnNumber);
+
 }

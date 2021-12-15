@@ -1,5 +1,6 @@
 package com.example.warThunder.controller;
 
+import com.example.warThunder.repository.UserDao;
 import com.example.warThunder.service.UserService;
 import com.example.warThunder.service.dto.UserDto;
 import lombok.RequiredArgsConstructor;
@@ -46,5 +47,15 @@ public class UserController {
     @GetMapping("/login")
     public ResponseEntity<UserDto> getUserByNameAndPass(@RequestBody UserDto userDto) {
         return new ResponseEntity<>(userService.getUserByNamePass(userDto), HttpStatus.OK);
+    }
+
+    @GetMapping("/exist/{username}")
+    public ResponseEntity<?> isExist(@PathVariable(name = "username") String username){
+        return new ResponseEntity<>(userService.isUsernameExist(username), HttpStatus.OK);
+    }
+
+    @GetMapping("/turn/{number}")
+    public ResponseEntity<?> getUsersWithTurnNumber (@PathVariable(name = "number") int number){
+        return new ResponseEntity<>(userService.getUsersWithTurnNumber(number),HttpStatus.OK);
     }
 }

@@ -26,4 +26,19 @@ public class GameController {
         return new ResponseEntity<>(gameService.makeMove(movementDto, gameId), HttpStatus.OK);
     }
 
+    @PutMapping
+    public ResponseEntity<?> update(@RequestBody GameDto gameDto) {
+        return new ResponseEntity<>(gameService.updateGame(gameDto), HttpStatus.OK);
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<?> delete(@PathVariable(name = "id") long id) {
+        gameService.deleteGame(id);
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
+
+    @GetMapping
+    public ResponseEntity<?> getGames() {
+        return new ResponseEntity<>(gameService.getAllGames(), HttpStatus.OK);
+    }
 }
