@@ -16,4 +16,6 @@ public interface UserDao extends Dao<User> {
 
     List<User> getUsersWithTurnNumber(int turnNumber);
 
+    List<User> getSorted(String field, boolean isAsc);
+
 }

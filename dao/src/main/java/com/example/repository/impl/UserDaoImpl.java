@@ -49,7 +49,7 @@ public class UserDaoImpl extends AbstractDao<User> implements UserDao {
     public boolean isUsernameExist(String username) {
         log.info("Проверка на существование пользователя с именем: " + username);
         String queryString = "select count(id) from User where name = :name";
-        return (Long)getEntityManager()
+        return (Long) getEntityManager()
                 .createQuery(queryString)
                 .setParameter("name", username)
                 .getSingleResult() > 0;
@@ -58,12 +58,24 @@ public class UserDaoImpl extends AbstractDao<User> implements UserDao {
     @Override
     public List<User> getSortByName() {
         log.info("Сортировка пользователей по имени");
-        return getEntityManager().createQuery("SELECT user FROM User user ORDER BY user.name").getResultList();
+        return getEntityManager()
+                .createQuery("SELECT user FROM User user ORDER BY user.name")
+                .getResultList();
     }
 
     @Override
     public List<User> getUsersWithTurnNumber(int turnNumber) {
         String queryString = "SELECT DISTINCT user FROM Movement mov, User user WHERE mov.turnNumber = :x and mov.userId = user.id";
-        return getEntityManager().createQuery(queryString).setParameter("x", turnNumber).getResultList();
+        return getEntityManager()
+                .createQuery(queryString)
+                .setParameter("x", turnNumber)
+                .getResultList();
+    }
+
+    @Override
+    public List<User> getSorted(String field, boolean isAsc) {
+        return getEntityManager()
+                .createQuery("SELECT u FROM User u ORDER BY u." + field + (isAsc ? " asc" : " desc"))
+                .getResultList();
     }
 }
